@@ -28,7 +28,6 @@ for filename in os.listdir(input_dir):
         
     # Define the input and output file paths
     input_file = os.path.join(input_dir, filename)
-    output_file = os.path.join(output_dir, filename)
     print("analyzing",input_file)
     # Open the input PDF file and iterate over its pages
     with fitz.open(input_file) as doc:
@@ -47,7 +46,7 @@ for filename in os.listdir(input_dir):
                 # Classify the sentence as related to limitations/future scope or not
                 outputs = model(**inputs)
                 predicted_label = 'contradiction' if outputs.logits[0][0] > outputs.logits[0][2] else 'entailment'
-                
+                print(outputs.logits)
                 # Highlight the sentence if it's related to limitations/future scope
                 if predicted_label == 'entailment' and any(keyword in sentence.lower() for keyword in keywords):
                     matches = page.search_for(sentence)
@@ -56,4 +55,5 @@ for filename in os.listdir(input_dir):
                         highlight.update()
         
         # Save the modified PDF with highlighted sentences
-        doc.save(output_file)
+        #output_file_path = os.path.join(output_dir, filename)
+        #doc.save(output_file_path)
